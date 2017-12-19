@@ -267,7 +267,6 @@ QgsMapLayer *QgsMapCanvas::layer( int index )
     return nullptr;
 }
 
-
 void QgsMapCanvas::setCurrentLayer( QgsMapLayer *layer )
 {
   mCurrentLayer = layer;

@@ -55,7 +55,7 @@ QgsMapToolCapture::QgsMapToolCapture( QgsMapCanvas *canvas, QgsAdvancedDigitizin
   setCursor( QCursor( mySelectQPixmap, 8, 8 ) );
 
   connect( canvas, &QgsMapCanvas::currentLayerChanged,
-           this, &QgsMapToolCapture::setCurrentLayer );
+           this, &QgsMapToolCapture::currentLayerChanged );
 }
 
 QgsMapToolCapture::~QgsMapToolCapture()
@@ -97,7 +97,7 @@ void QgsMapToolCapture::validationFinished()
   }
 }
 
-void QgsMapToolCapture::setCurrentLayer( QgsMapLayer *layer )
+void QgsMapToolCapture::currentLayerChanged( QgsMapLayer *layer )
 {
   if ( !mCaptureModeFromLayer )
     return;
