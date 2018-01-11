@@ -1321,11 +1321,6 @@ QgisApp::~QgisApp()
 {
   stopRendering();
 
-  QgsGui::mapLayerActionRegistry()->removeMapLayerAction( mDuplicateFeatureDigitizeAction );
-  delete mDuplicateFeatureDigitizeAction;
-  QgsGui::mapLayerActionRegistry()->removeMapLayerAction( mDuplicateFeatureAction );
-  delete mDuplicateFeatureAction;
-
   delete mInternalClipboard;
   delete mQgisInterface;
   delete mStyleSheetBuilder;
@@ -7457,37 +7452,23 @@ void QgisApp::setupLayoutManagerConnections()
 
 void QgisApp::setupDuplicateFeaturesAction()
 {
-  if ( mDuplicateFeatureAction )
-  {
-    QgsGui::mapLayerActionRegistry()->removeMapLayerAction( mDuplicateFeatureAction );
-    delete mDuplicateFeatureAction;
-    mDuplicateFeatureAction = nullptr;
-  }
+  mDuplicateFeatureAction.reset( new QgsMapLayerAction( QString( tr( "Duplicate feature" ) ),
+                                 this, QgsMapLayerAction::AllActions,
+                                 QgsApplication::getThemeIcon( QStringLiteral( "/mActionDuplicateFeature.svg" ) ) ) );
 
-  mDuplicateFeatureAction = new QgsMapLayerAction( QString( tr( "Duplicate feature" ) ),
-      this, QgsMapLayerAction::AllActions,
-      QgsApplication::getThemeIcon( QStringLiteral( "/mActionDuplicateFeature.svg" ) ) );
-
-  QgsGui::mapLayerActionRegistry()->addMapLayerAction( mDuplicateFeatureAction );
-  connect( mDuplicateFeatureAction, &QgsMapLayerAction::triggeredForFeature, this, [this]( QgsMapLayer * layer, const QgsFeature & feat )
+  QgsGui::mapLayerActionRegistry()->addMapLayerAction( mDuplicateFeatureAction.get() );
+  connect( mDuplicateFeatureAction.get(), &QgsMapLayerAction::triggeredForFeature, this, [this]( QgsMapLayer * layer, const QgsFeature & feat )
   {
     duplicateFeatures( layer, feat );
   }
          );
 
-  if ( mDuplicateFeatureDigitizeAction )
-  {
-    QgsGui::mapLayerActionRegistry()->removeMapLayerAction( mDuplicateFeatureDigitizeAction );
-    delete mDuplicateFeatureDigitizeAction;
-    mDuplicateFeatureDigitizeAction = nullptr;
-  }
+  mDuplicateFeatureDigitizeAction.reset( new QgsMapLayerAction( QString( tr( "Duplicate feature and digitize" ) ),
+                                         this, QgsMapLayerAction::AllActions,
+                                         QgsApplication::getThemeIcon( QStringLiteral( "/mActionDuplicateFeatureDigitized.svg" ) ) ) );
 
-  mDuplicateFeatureDigitizeAction = new QgsMapLayerAction( QString( tr( "Duplicate feature and digitize" ) ),
-      this, QgsMapLayerAction::AllActions,
-      QgsApplication::getThemeIcon( QStringLiteral( "/mActionDuplicateFeatureDigitized.svg" ) ) );
-
-  QgsGui::mapLayerActionRegistry()->addMapLayerAction( mDuplicateFeatureDigitizeAction );
-  connect( mDuplicateFeatureDigitizeAction, &QgsMapLayerAction::triggeredForFeature, this, [this]( QgsMapLayer * layer, const QgsFeature & feat )
+  QgsGui::mapLayerActionRegistry()->addMapLayerAction( mDuplicateFeatureDigitizeAction.get() );
+  connect( mDuplicateFeatureDigitizeAction.get(), &QgsMapLayerAction::triggeredForFeature, this, [this]( QgsMapLayer * layer, const QgsFeature & feat )
   {
     duplicateFeatureDigitized( layer, feat );
   }
