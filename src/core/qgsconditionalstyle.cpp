@@ -277,12 +277,14 @@ QgsConditionalStyle QgsConditionalStyle::compressStyles( const QList<QgsConditio
 
 bool QgsConditionalStyle::writeXml( QDomNode &node, QDomDocument &doc ) const
 {
-  QDomElement stylesel = doc.createElement( "style" );
-  stylesel.setAttribute( "rule", mRule );
-  stylesel.setAttribute( "name", mName );
-  stylesel.setAttribute( "background_color", mBackColor.name() );
-  stylesel.setAttribute( "text_color", mTextColor.name() );
-  QDomElement labelFontElem = QgsFontUtils::toXmlElement( mFont, doc, "font" );
+  QDomElement stylesel = doc.createElement( QStringLiteral( "style" ) );
+  stylesel.setAttribute( QStringLiteral( "rule" ), mRule );
+  stylesel.setAttribute( QStringLiteral( "name" ), mName );
+  stylesel.setAttribute( QStringLiteral( "background_color" ), mBackColor.name() );
+  stylesel.setAttribute( QStringLiteral( "background_color_alpha" ), mBackColor.alpha() );
+  stylesel.setAttribute( QStringLiteral( "text_color" ), mTextColor.name() );
+  stylesel.setAttribute( QStringLiteral( "text_color_alpha" ), mTextColor.alpha() );
+  QDomElement labelFontElem = QgsFontUtils::toXmlElement( mFont, doc, QStringLiteral( "font" ) );
   stylesel.appendChild( labelFontElem );
   if ( ! mSymbol.isNull() )
   {
@@ -296,12 +298,22 @@ bool QgsConditionalStyle::writeXml( QDomNode &node, QDomDocument &doc ) const
 bool QgsConditionalStyle::readXml( const QDomNode &node )
 {
   QDomElement styleElm = node.toElement();
-  setRule( styleElm.attribute( "rule" ) );
-  setName( styleElm.attribute( "name" ) );
-  setBackgroundColor( QColor( styleElm.attribute( "background_color" ) ) );
-  setTextColor( QColor( styleElm.attribute( "text_color" ) ) );
-  QgsFontUtils::setFromXmlChildNode( mFont, styleElm, "font" );
-  QDomElement symbolElm = styleElm.firstChildElement( "symbol" );
+  setRule( styleElm.attribute( QStringLiteral( "rule" ) ) );
+  setName( styleElm.attribute( QStringLiteral( "name" ) ) );
+  QColor bColor = QColor( styleElm.attribute( QStringLiteral( "background_color" ) ) );
+  if( styleElm.hasAttribute( "background_color_alpha" ) )
+  {
+    bColor.setAlpha( styleElm.attribute( QStringLiteral( "background_color_alpha" ) ).toInt() );
+  }
+  setBackgroundColor( bColor );
+  QColor tColor = QColor( styleElm.attribute( QStringLiteral( "text_color" ) ) );
+  if( styleElm.hasAttribute( "text_color_alpha" ) )
+  {
+    tColor.setAlpha( styleElm.attribute( QStringLiteral( "text_color_alpha" ) ).toInt() );
+  }
+  setTextColor( tColor );
+  QgsFontUtils::setFromXmlChildNode( mFont, styleElm, QStringLiteral( "font" ) );
+  QDomElement symbolElm = styleElm.firstChildElement( QStringLiteral( "symbol" ) );
   if ( !symbolElm.isNull() )
   {
     QgsSymbolV2* symbol = QgsSymbolLayerV2Utils::loadSymbol<QgsMarkerSymbolV2>( symbolElm );
