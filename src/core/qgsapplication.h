@@ -22,6 +22,7 @@
 
 #include "qgis.h"
 #include "qgsconfig.h"
+#include "qgstranslationcontext.h"
 
 class Qgs3DRendererRegistry;
 class QgsActionScopeRegistry;
@@ -732,6 +733,13 @@ class CORE_EXPORT QgsApplication : public QApplication
      */
     static void setCustomVariable( const QString &name, const QVariant &value );
 
+    /**
+     * dave : to write
+     *
+     * \since QGIS 3.2
+     */
+    void collectTranslatableObjects( QgsTranslationContext *translationContext );
+
 #ifdef SIP_RUN
     SIP_IF_FEATURE( ANDROID )
     //dummy method to workaround sip generation issue
@@ -754,6 +762,13 @@ class CORE_EXPORT QgsApplication : public QApplication
      * \copydoc nullRepresentation()
      */
     void nullRepresentationChanged();
+
+    /**
+     * dave : to write
+     *
+     * \since QGIS 3.2
+     */
+    void requestForTranslatableObjects( QgsTranslationContext *translationContext );
 
   private:
 

@@ -1461,6 +1461,10 @@ void QgsApplication::setCustomVariable( const QString &name, const QVariant &val
   emit instance()->customVariablesChanged();
 }
 
+void QgsApplication::collectTranslatableObjects( QgsTranslationContext *translationContext )
+{
+  emit requestForTranslatableObjects( translationContext );
+}
 
 QString QgsApplication::nullRepresentation()
 {
