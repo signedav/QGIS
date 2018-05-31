@@ -734,7 +734,7 @@ class CORE_EXPORT QgsApplication : public QApplication
     static void setCustomVariable( const QString &name, const QVariant &value );
 
     /**
-     * dave : to write
+     * Emits the signal to collect all the strings of .qgs to be included in ts file
      *
      * \since QGIS 3.2
      */
@@ -764,7 +764,7 @@ class CORE_EXPORT QgsApplication : public QApplication
     void nullRepresentationChanged();
 
     /**
-     * dave : to write
+     * requests vor strings of .qgs to be included in ts file
      *
      * \since QGIS 3.2
      */
