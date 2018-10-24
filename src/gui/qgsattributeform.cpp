@@ -260,9 +260,13 @@ void QgsAttributeForm::setFeature( const QgsFeature &feature )
       }
       break;
     }
-    case MultiEditMode:
-    case SearchMode:
-    case AggregateSearchMode:
+    case QgsAttributeEditorContext::SearchMode:
+    case QgsAttributeEditorContext::AggregateSearchMode:
+    {
+      resetValues();
+      break;
+    }
+    case QgsAttributeEditorContext::MultiEditMode:
     {
       //ignore setFeature
       break;
