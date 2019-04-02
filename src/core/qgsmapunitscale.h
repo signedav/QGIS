@@ -61,6 +61,18 @@ class CORE_EXPORT QgsMapUnitScale
      */
     double maxScale;
 
+    /**
+     * The default scale, or 1.0 if unset if there is no given scale by the map
+     * The scale value indicates the scale denominator, e.g. 1000.0 for a 1:1000 map.
+     */
+    double defaultScale = 1.0;
+
+    /**
+     * The default mapunits per pixel amount, or 1.0 if unset if there is no given amount by the map size
+     * The amount of map units per pixel
+     */
+    double defaultMapUnitsPerPixel = 1.0;
+
     //! Whether the minimum size in mm should be respected
     bool minSizeMMEnabled = false;
     //! The minimum size in millimeters, or 0.0 if unset

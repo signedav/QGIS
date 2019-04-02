@@ -38,6 +38,10 @@ Constructor for QgsMapUnitScale
 
     double maxScale;
 
+    double defaultScale;
+
+    double defaultMapUnitsPerPixel;
+
     bool minSizeMMEnabled;
     double minSizeMM;
     bool maxSizeMMEnabled;

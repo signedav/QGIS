@@ -41,6 +41,11 @@ QgsMapSettings::QgsMapSettings()
 {
   mScaleCalculator.setMapUnits( QgsUnitTypes::DistanceUnknownUnit );
 
+  //set defaults
+  //QgsMapUnitScale scale;
+  mMapUnitsPerPixel = double( 0.0950250 ); //scale.defaultMapUnitsPerPixel;
+  mScale = double( 20000000 ); //scale.defaultScale;
+
   updateDerived();
 }
 

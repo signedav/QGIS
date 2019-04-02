@@ -450,6 +450,7 @@ QSizeF QgsSymbolLayerUtils::decodeSize( const QString &string )
 
 QString QgsSymbolLayerUtils::encodeMapUnitScale( const QgsMapUnitScale &mapUnitScale )
 {
+  //dave hier integrieren
   return QStringLiteral( "3x:%1,%2,%3,%4,%5,%6" ).arg( qgsDoubleToString( mapUnitScale.minScale ),
          qgsDoubleToString( mapUnitScale.maxScale ) )
          .arg( mapUnitScale.minSizeMMEnabled ? 1 : 0 )
@@ -460,6 +461,7 @@ QString QgsSymbolLayerUtils::encodeMapUnitScale( const QgsMapUnitScale &mapUnitS
 
 QgsMapUnitScale QgsSymbolLayerUtils::decodeMapUnitScale( const QString &str )
 {
+  //dave hier integrieren
   QStringList lst;
   bool v3 = false;
   if ( str.startsWith( QLatin1String( "3x:" ) ) )

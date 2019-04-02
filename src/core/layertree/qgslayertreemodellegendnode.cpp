@@ -418,6 +418,10 @@ QSizeF QgsSymbolLegendNode::drawSymbol( const QgsLegendSettings &settings, ItemC
   // setup temporary render context
   QgsRenderContext context;
   context.setScaleFactor( settings.dpi() / 25.4 );
+  //dave
+  //if( settings.mapScale() == -1 )
+  //  context.setRendererScale( double(10000000) );
+  //else
   context.setRendererScale( settings.mapScale() );
   context.setMapToPixel( QgsMapToPixel( 1 / ( settings.mmPerMapUnit() * context.scaleFactor() ) ) );
   context.setForceVectorOutput( true );

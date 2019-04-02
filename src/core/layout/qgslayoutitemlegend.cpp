@@ -107,6 +107,9 @@ void QgsLayoutItemLegend::paint( QPainter *painter, const QStyleOptionGraphicsIt
     QgsMapSettings ms = mMap->mapSettings( mapExtent, mapSizePixels, dpi, false );
     mSettings.setMapScale( ms.scale() );
   }
+
+  //dave evtl. hier: set settings.mapscale to -1???
+
   mInitialMapScaleCalculated = true;
 
   QgsLegendRenderer legendRenderer( mLegendModel.get(), mSettings );

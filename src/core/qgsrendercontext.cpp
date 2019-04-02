@@ -320,6 +320,14 @@ double QgsRenderContext::convertToMapUnits( double size, QgsUnitTypes::RenderUni
 {
   double mup = mMapToPixel.mapUnitsPerPixel();
 
+  //if( qgsDoubleNear( mup, 1 ) )
+  //  mup = double( 0.035 );
+
+  double rendererScale = mRendererScale;
+
+  //if( qgsDoubleNear( rendererScale, 1.0 ) )
+  //  rendererScale = double ( 10000000 );
+
   switch ( unit )
   {
     case QgsUnitTypes::RenderMetersInMapUnits:
@@ -338,7 +346,7 @@ double QgsRenderContext::convertToMapUnits( double size, QgsUnitTypes::RenderUni
       }
       if ( !qgsDoubleNear( scale.minScale, 0.0 ) )
       {
-        minSizeMU = std::max( minSizeMU, size * ( mRendererScale / scale.minScale ) );
+        minSizeMU = std::max( minSizeMU, size * ( rendererScale / scale.minScale ) );
       }
       size = std::max( size, minSizeMU );
 
@@ -349,7 +357,8 @@ double QgsRenderContext::convertToMapUnits( double size, QgsUnitTypes::RenderUni
       }
       if ( !qgsDoubleNear( scale.maxScale, 0.0 ) )
       {
-        maxSizeMU = std::min( maxSizeMU, size * ( mRendererScale / scale.maxScale ) );
+        maxSizeMU = std::min( maxSizeMU, size * ( rendererScale
+                              / scale.maxScale ) );
       }
       size = std::min( size, maxSizeMU );
 

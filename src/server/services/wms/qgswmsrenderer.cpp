@@ -183,15 +183,16 @@ namespace QgsWms
     std::unique_ptr<QImage> image;
     std::unique_ptr<QPainter> painter;
 
+
+    QgsMapSettings mapSettings;
     // getting scale from bbox
     if ( !mWmsParameters.bbox().isEmpty() )
     {
-      QgsMapSettings mapSettings;
       image.reset( createImage( width(), height(), false ) );
       configureMapSettings( image.get(), mapSettings );
-      legendSettings.setMapScale( mapSettings.scale() );
-      legendSettings.setMapUnitsPerPixel( mapSettings.mapUnitsPerPixel() );
     }
+    legendSettings.setMapScale( mapSettings.scale() );
+    legendSettings.setMapUnitsPerPixel( mapSettings.mapUnitsPerPixel() );
 
     if ( !mWmsParameters.rule().isEmpty() )
     {

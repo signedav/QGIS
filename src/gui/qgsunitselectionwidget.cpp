@@ -25,6 +25,8 @@ QgsMapUnitScaleWidget::QgsMapUnitScaleWidget( QWidget *parent )
   setupUi( this );
   mComboBoxMinScale->setScale( 10000000.0 );
   mComboBoxMaxScale->setScale( 1 );
+  mComboBoxDefaultScale->setScale( 1 );
+  mSpinBoxDefaultMapUnitsPerPixel->setValue( 1 );
   mSpinBoxMinSize->setShowClearButton( false );
   mSpinBoxMaxSize->setShowClearButton( false );
   connect( mCheckBoxMinScale, &QCheckBox::toggled, this, &QgsMapUnitScaleWidget::configureMinComboBox );
@@ -32,6 +34,9 @@ QgsMapUnitScaleWidget::QgsMapUnitScaleWidget( QWidget *parent )
   connect( mComboBoxMinScale, &QgsScaleWidget::scaleChanged, this, &QgsMapUnitScaleWidget::configureMaxComboBox );
   connect( mComboBoxMinScale, &QgsScaleWidget::scaleChanged, mComboBoxMaxScale, &QgsScaleWidget::setMinScale );
   connect( mComboBoxMaxScale, &QgsScaleWidget::scaleChanged, this, &QgsMapUnitScaleWidget::configureMinComboBox );
+
+  connect( mCheckBoxDefaultScale, &QCheckBox::toggled, mComboBoxDefaultScale, &QgsMapUnitScaleWidget::setEnabled );
+  connect( mCheckBoxDefaultMapUnitsPerPixel, &QCheckBox::toggled, mSpinBoxDefaultMapUnitsPerPixel, &QgsDoubleSpinBox::setEnabled );
 
   connect( mCheckBoxMinSize, &QCheckBox::toggled, mSpinBoxMinSize, &QgsDoubleSpinBox::setEnabled );
   connect( mCheckBoxMaxSize, &QCheckBox::toggled, mSpinBoxMaxSize, &QgsDoubleSpinBox::setEnabled );
@@ -59,6 +64,18 @@ void QgsMapUnitScaleWidget::setMapUnitScale( const QgsMapUnitScale &scale )
   mComboBoxMaxScale->setScale( scale.maxScale > 0.0 ? scale.maxScale : 1.0 );
   mCheckBoxMaxScale->setChecked( scale.maxScale > 0.0 );
   mComboBoxMaxScale->setEnabled( scale.maxScale > 0.0 );
+
+  mCheckBoxDefaultScale->setChecked( scale.defaultScale != 1.0 );
+  mComboBoxDefaultScale->setEnabled( scale.defaultScale != 1.0 );
+  mComboBoxDefaultScale->setScale( scale.defaultScale );
+
+  mCheckBoxDefaultMapUnitsPerPixel->setChecked( scale.defaultMapUnitsPerPixel != 1.0 );
+  mSpinBoxDefaultMapUnitsPerPixel->setEnabled( scale.defaultMapUnitsPerPixel != 1.0 );
+  mSpinBoxDefaultMapUnitsPerPixel->setValue( scale.defaultMapUnitsPerPixel );
+
+  mCheckBoxMinSize->setChecked( scale.minSizeMMEnabled );
+  mSpinBoxMinSize->setEnabled( scale.minSizeMMEnabled );
+  mSpinBoxMinSize->setValue( scale.minSizeMM );
 
   mCheckBoxMinSize->setChecked( scale.minSizeMMEnabled );
   mSpinBoxMinSize->setEnabled( scale.minSizeMMEnabled );
@@ -111,6 +128,8 @@ QgsMapUnitScale QgsMapUnitScaleWidget::mapUnitScale() const
   QgsMapUnitScale scale;
   scale.minScale = mCheckBoxMinScale->isChecked() ? mComboBoxMinScale->scale() : 0;
   scale.maxScale = mCheckBoxMaxScale->isChecked() ? mComboBoxMaxScale->scale() : 0;
+  scale.defaultScale = mCheckBoxDefaultScale->isChecked() ? mComboBoxDefaultScale->scale() : 1.0;
+  scale.defaultMapUnitsPerPixel = mCheckBoxDefaultMapUnitsPerPixel->isChecked() ? mSpinBoxDefaultMapUnitsPerPixel->value() : 1.0;
   scale.minSizeMMEnabled = mCheckBoxMinSize->isChecked();
   scale.minSizeMM = mSpinBoxMinSize->value();
   scale.maxSizeMMEnabled = mCheckBoxMaxSize->isChecked();

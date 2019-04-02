@@ -4026,6 +4026,7 @@ void QgsDxfExport::clipValueToMapUnitScale( double &value, const QgsMapUnitScale
 
   double mapUnitsPerPixel = mMapSettings.mapToPixel().mapUnitsPerPixel();
 
+  //dave hier vermutlich integrieren
   double minSizeMU = std::numeric_limits<double>::lowest();
   if ( scale.minSizeMMEnabled )
   {
