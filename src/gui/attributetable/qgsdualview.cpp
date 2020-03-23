@@ -52,6 +52,12 @@ QgsDualView::QgsDualView( QWidget *parent )
   connect( mFeatureListView, &QgsFeatureListView::aboutToChangeEditSelection, this, &QgsDualView::featureListAboutToChangeEditSelection );
   connect( mFeatureListView, &QgsFeatureListView::currentEditSelectionChanged, this, &QgsDualView::featureListCurrentEditSelectionChanged );
   connect( mFeatureListView, &QgsFeatureListView::currentEditSelectionProgressChanged, this, &QgsDualView::updateEditSelectionProgress );
+  connect( mFeatureListView, &QgsFeatureListView::willShowContextMenu, this, &QgsDualView::widgetWillShowContextMenu );
+
+  connect( mTableView, &QgsAttributeTableView::willShowContextMenu, this, &QgsDualView::viewWillShowContextMenu );
+  mTableView->horizontalHeader()->setContextMenuPolicy( Qt::CustomContextMenu );
+  connect( mTableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &QgsDualView::showViewHeaderMenu );
+  connect( mTableView, &QgsAttributeTableView::columnResized, this, &QgsDualView::tableColumnResized );
 
   mConditionalFormatWidgetStack->hide();
   mConditionalFormatWidget = new QgsFieldConditionalFormatWidget( this );
@@ -117,12 +123,6 @@ void QgsDualView::init( QgsVectorLayer *layer, QgsMapCanvas *mapCanvas, const Qg
 
   mLayer = layer;
   mEditorContext = context;
-
-  connect( mTableView, &QgsAttributeTableView::willShowContextMenu, this, &QgsDualView::viewWillShowContextMenu );
-  mTableView->horizontalHeader()->setContextMenuPolicy( Qt::CustomContextMenu );
-  connect( mTableView->horizontalHeader(), &QHeaderView::customContextMenuRequested, this, &QgsDualView::showViewHeaderMenu );
-  connect( mTableView, &QgsAttributeTableView::columnResized, this, &QgsDualView::tableColumnResized );
-  connect( mFeatureListView, &QgsFeatureListView::willShowContextMenu, this, &QgsDualView::widgetWillShowContextMenu );
 
   initLayerCache( !( request.flags() & QgsFeatureRequest::NoGeometry ) || !request.filterRect().isNull() );
   initModels( mapCanvas, request, loadFeatures );
