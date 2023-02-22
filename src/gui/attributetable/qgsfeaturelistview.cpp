@@ -465,45 +465,46 @@ void QgsFeatureListView::ensureEditSelection( bool inSelection )
 
   if ( editSelectionUpdateRequested )
   {
-    if ( !mUpdateEditSelectionTimer.isSingleShot() )
+    mUpdateEditSelectionTimer.setSingleShot( true );
+    QMetaObject::Connection *connection = new QMetaObject::Connection();
+    *connection = connect( &mUpdateEditSelectionTimer, &QTimer::timeout, this, [ this, connection, inSelection, validEditSelectionAvailable ]()
     {
-      mUpdateEditSelectionTimer.setSingleShot( true );
-      connect( &mUpdateEditSelectionTimer, &QTimer::timeout, this, [ this, inSelection, validEditSelectionAvailable ]()
+      QObject::disconnect( *connection );
+      delete connection;
+
+      // The layer might have been removed between timer start and timer triggered
+      // in this case there is nothing left for us to do.
+      if ( !layerCache() )
+        return;
+
+      int rowToSelect = -1;
+
+      if ( inSelection )
       {
-        // The layer might have been removed between timer start and timer triggered
-        // in this case there is nothing left for us to do.
-        if ( !layerCache() )
-          return;
+        const QgsFeatureIds selectedFids = layerCache()->layer()->selectedFeatureIds();
+        const int rowCount = mModel->rowCount();
 
-        int rowToSelect = -1;
-
-        if ( inSelection )
+        for ( int i = 0; i < rowCount; i++ )
         {
-          const QgsFeatureIds selectedFids = layerCache()->layer()->selectedFeatureIds();
-          const int rowCount = mModel->rowCount();
-
-          for ( int i = 0; i < rowCount; i++ )
+          if ( selectedFids.contains( mModel->idxToFid( mModel->index( i, 0 ) ) ) )
           {
-            if ( selectedFids.contains( mModel->idxToFid( mModel->index( i, 0 ) ) ) )
-            {
-              rowToSelect = i;
-              break;
-            }
-
-            if ( rowToSelect == -1 && !validEditSelectionAvailable )
-              rowToSelect = 0;
+            rowToSelect = i;
+            break;
           }
-        }
-        else
-          rowToSelect = 0;
 
-        if ( rowToSelect != -1 )
-        {
-          setEditSelection( mModel->mapToMaster( mModel->index( rowToSelect, 0 ) ), QItemSelectionModel::ClearAndSelect );
+          if ( rowToSelect == -1 && !validEditSelectionAvailable )
+            rowToSelect = 0;
         }
-      } );
-      mUpdateEditSelectionTimer.setInterval( 0 );
-    }
+      }
+      else
+        rowToSelect = 0;
+
+      if ( rowToSelect != -1 )
+      {
+        setEditSelection( mModel->mapToMaster( mModel->index( rowToSelect, 0 ) ), QItemSelectionModel::ClearAndSelect );
+      }
+    } );
+    mUpdateEditSelectionTimer.setInterval( 0 );
     mUpdateEditSelectionTimer.start();
   }
 }
