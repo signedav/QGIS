@@ -100,6 +100,8 @@ setFeatureSelectionManager
 :param featureSelectionManager:
 %End
 
+    QgsFeatureId lastEditSelectionFid();
+
   protected:
     virtual void mouseMoveEvent( QMouseEvent *event );
 
@@ -163,6 +165,8 @@ Set the feature(s) to be edited
 :param index: The selection to set
 :param command: selection update mode
 %End
+
+    void setLastEditSelectionFid( const QgsFeatureId fid );
 
     virtual void selectAll();
 

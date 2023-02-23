@@ -130,6 +130,8 @@ class GUI_EXPORT QgsFeatureListView : public QListView
      */
     void setFeatureSelectionManager( QgsIFeatureSelectionManager *featureSelectionManager );
 
+    QgsFeatureId lastEditSelectionFid() { return mLastEditSelectionFid; }
+
   protected:
     void mouseMoveEvent( QMouseEvent *event ) override;
     void mousePressEvent( QMouseEvent *event ) override;
@@ -185,6 +187,8 @@ class GUI_EXPORT QgsFeatureListView : public QListView
      * \param command selection update mode
      */
     void setEditSelection( const QModelIndex &index, QItemSelectionModel::SelectionFlags command );
+
+    void setLastEditSelectionFid( const QgsFeatureId fid ) { mLastEditSelectionFid = fid;}
 
     /**
      * Select all currently visible features
@@ -265,6 +269,8 @@ class GUI_EXPORT QgsFeatureListView : public QListView
     QItemSelectionModel::SelectionFlags mCtrlDragSelectionFlag;
 
     QTimer mUpdateEditSelectionTimer;
+
+    QgsFeatureId mLastEditSelectionFid;
 
     friend class QgsDualView;
 };
