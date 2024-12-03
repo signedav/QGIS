@@ -3444,7 +3444,7 @@ QRectF QgsRasterMarkerSymbolLayer::bounds( QPointF point, QgsSymbolRenderContext
 
 //////////
 
-QgsFontMarkerSymbolLayer::QgsFontMarkerSymbolLayer( const QString &fontFamily, QString chr, double pointSize, const QColor &color, double angle )
+QgsFontMarkerSymbolLayer::QgsFontMarkerSymbolLayer( const QString &fontFamily, QString chr, double pointSize, const QColor &color, double angle, const bool baselineAsCenter )
 {
   mFontFamily = fontFamily;
   mString = chr;
@@ -3459,6 +3459,7 @@ QgsFontMarkerSymbolLayer::QgsFontMarkerSymbolLayer( const QString &fontFamily, Q
   mStrokeWidth = 0.0;
   mStrokeWidthUnit = Qgis::RenderUnit::Millimeters;
   mPenJoinStyle = DEFAULT_FONTMARKER_JOINSTYLE;
+  mBaselineAsCenter = baselineAsCenter;
 }
 
 QgsFontMarkerSymbolLayer::~QgsFontMarkerSymbolLayer() = default;
@@ -3521,6 +3522,8 @@ QgsSymbolLayer *QgsFontMarkerSymbolLayer::create( const QVariantMap &props )
     m->setHorizontalAnchorPoint( QgsMarkerSymbolLayer::HorizontalAnchorPoint( props[ QStringLiteral( "horizontal_anchor_point" )].toInt() ) );
   if ( props.contains( QStringLiteral( "vertical_anchor_point" ) ) )
     m->setVerticalAnchorPoint( QgsMarkerSymbolLayer::VerticalAnchorPoint( props[ QStringLiteral( "vertical_anchor_point" )].toInt() ) );
+  if ( props.contains( QStringLiteral( "baseline_as_center" ) ) )
+    m->setBaselineAsCenter( props[ QStringLiteral( "baseline_as_center" )].toBool() );
 
   m->restoreOldDataDefinedProperties( props );
 
@@ -3575,7 +3578,11 @@ void QgsFontMarkerSymbolLayer::startRender( QgsSymbolRenderContext &context )
   mFont.setPixelSize( std::max( 2, static_cast< int >( std::round( sizePixels ) ) ) );
   mFontMetrics.reset( new QFontMetrics( mFont ) );
   mChrWidth = mFontMetrics->horizontalAdvance( mString );
-  mChrOffset = QPointF( mChrWidth / 2.0, -mFontMetrics->ascent() / 2.0 );
+  qreal verticalCenter = 0;
+
+  if ( !baselineAsCenter() )
+    verticalCenter = -mFontMetrics->ascent() / 2.0;
+  mChrOffset = QPointF( mChrWidth / 2.0, verticalCenter );
   mOrigSize = mSize; // save in case the size would be data defined
 
   // use caching only when not using a data defined character
@@ -3608,7 +3615,11 @@ QString QgsFontMarkerSymbolLayer::characterToRender( QgsSymbolRenderContext &con
     if ( stringToRender != mString )
     {
       charWidth = mFontMetrics->horizontalAdvance( stringToRender );
-      charOffset = QPointF( charWidth / 2.0, -mFontMetrics->ascent() / 2.0 );
+
+      qreal verticalCenter = 0;
+      if ( !baselineAsCenter() )
+        verticalCenter = -mFontMetrics->ascent() / 2.0;
+      charOffset = QPointF( charWidth / 2.0, verticalCenter );
     }
   }
   return stringToRender;
@@ -3838,12 +3849,13 @@ QVariantMap QgsFontMarkerSymbolLayer::properties() const
   props[QStringLiteral( "offset_map_unit_scale" )] = QgsSymbolLayerUtils::encodeMapUnitScale( mOffsetMapUnitScale );
   props[QStringLiteral( "horizontal_anchor_point" )] = QString::number( mHorizontalAnchorPoint );
   props[QStringLiteral( "vertical_anchor_point" )] = QString::number( mVerticalAnchorPoint );
+  props[QStringLiteral( "baseline_as_center" )] = mBaselineAsCenter;
   return props;
 }
 
 QgsFontMarkerSymbolLayer *QgsFontMarkerSymbolLayer::clone() const
 {
-  QgsFontMarkerSymbolLayer *m = new QgsFontMarkerSymbolLayer( mFontFamily, mString, mSize, mColor, mAngle );
+  QgsFontMarkerSymbolLayer *m = new QgsFontMarkerSymbolLayer( mFontFamily, mString, mSize, mColor, mAngle, mBaselineAsCenter );
   m->setFontStyle( mFontStyle );
   m->setStrokeColor( mStrokeColor );
   m->setStrokeWidth( mStrokeWidth );

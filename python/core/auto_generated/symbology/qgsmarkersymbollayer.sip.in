@@ -931,7 +931,8 @@ class QgsFontMarkerSymbolLayer : QgsMarkerSymbolLayer
                               QString chr = DEFAULT_FONTMARKER_CHR,
                               double pointSize = DEFAULT_FONTMARKER_SIZE,
                               const QColor &color = DEFAULT_FONTMARKER_COLOR,
-                              double angle = DEFAULT_FONTMARKER_ANGLE );
+                              double angle = DEFAULT_FONTMARKER_ANGLE,
+                              const bool baselineAsCenter = DEFAULT_BASELINE_AS_CENTER );
 %Docstring
 Constructs a font marker symbol layer.
 %End
@@ -1113,6 +1114,26 @@ Returns the stroke join style.
 Sets the stroke join ``style``.
 
 .. seealso:: :py:func:`penJoinStyle`
+%End
+
+    void setBaselineAsCenter( const bool baselineAsCenter );
+%Docstring
+Set the baseline as center of the font
+
+:param baselineAsCenter: the bool
+
+.. seealso:: :py:func:`baseLineAsCenter`
+
+.. versionadded:: 3.42
+%End
+
+    bool baselineAsCenter() const;
+%Docstring
+Returns wheter the baseline should be handled as center
+
+.. seealso:: :py:func:`setBaseLineAsCenter`
+
+.. versionadded:: 3.42
 %End
 
     virtual QRectF bounds( QPointF point, QgsSymbolRenderContext &context );

@@ -947,6 +947,15 @@ Set the font marker character from a text string.
 .. versionadded:: 3.8
 %End
 
+    void setBaselineAsCenter( const bool baselineAsCenter );
+%Docstring
+Set the baseline as center of the font
+
+:param baselineAsCenter: the bool
+
+.. versionadded:: 3.42
+%End
+
   protected:
 
 };

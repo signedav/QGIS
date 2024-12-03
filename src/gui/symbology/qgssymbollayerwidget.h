@@ -1207,6 +1207,13 @@ class GUI_EXPORT QgsFontMarkerSymbolLayerWidget : public QgsSymbolLayerWidget, p
      */
     void setCharacterFromText( const QString &text );
 
+    /**
+     * Set the baseline as center of the font
+     * \param baselineAsCenter the bool
+     * \since QGIS 3.42
+     */
+    void setBaselineAsCenter( const bool baselineAsCenter );
+
   protected:
     QgsFontMarkerSymbolLayer *mLayer = nullptr;
     CharacterWidget *widgetChar = nullptr;

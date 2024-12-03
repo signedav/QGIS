@@ -14,6 +14,63 @@
    <string notr="true">Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
+   <item row="1" column="0">
+    <widget class="QLabel" name="lblStyle">
+     <property name="text">
+      <string>Font style</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="mStrokeWidthLabel">
+     <property name="text">
+      <string>Stroke width</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QgsPenJoinStyleComboBox" name="cboJoinStyle"/>
+   </item>
+   <item row="11" column="2">
+    <widget class="QComboBox" name="mVerticalAnchorComboBox">
+     <item>
+      <property name="text">
+       <string>Top</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>VCenter</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Bottom</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="16" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mCharDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mFontStyleDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mStrokeWidthDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="2">
     <widget class="QgsColorButton" name="btnColor">
      <property name="sizePolicy">
@@ -39,56 +96,10 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="QgsColorButton" name="btnStrokeColor">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>120</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
+   <item row="17" column="0">
+    <widget class="QLabel" name="label_13">
      <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Size</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mStrokeWidthDDBtn">
-     <property name="text">
-      <string>…</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="lblFamily">
-     <property name="text">
-      <string>Font family</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lblStyle">
-     <property name="text">
-      <string>Font style</string>
+      <string>Preview</string>
      </property>
     </widget>
    </item>
@@ -120,17 +131,20 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mFontStyleDDBtn">
-     <property name="text">
-      <string>…</string>
+   <item row="0" column="2">
+    <widget class="QFontComboBox" name="cboFont">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
+     </property>
+     <property name="minimumContentsLength">
+      <number>8</number>
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="label_5">
+   <item row="16" column="0">
+    <widget class="QLabel" name="label_12">
      <property name="text">
-      <string>Offset</string>
+      <string>Character(s)</string>
      </property>
     </widget>
    </item>
@@ -203,130 +217,71 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="2">
-    <widget class="QFontComboBox" name="cboFont">
-     <property name="sizeAdjustPolicy">
-      <enum>QComboBox::AdjustToMinimumContentsLengthWithIcon</enum>
-     </property>
-     <property name="minimumContentsLength">
-      <number>8</number>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mFontFamilyDDBtn">
-     <property name="text">
-      <string>…</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0" rowspan="3">
-    <widget class="QLabel" name="mAnchorPointLabel">
-     <property name="text">
-      <string>Anchor point</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mStrokeColorDDBtn">
-     <property name="text">
-      <string>…</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_10">
-     <property name="text">
-      <string>Fill color</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_9">
+   <item row="4" column="2">
+    <widget class="QgsColorButton" name="btnStrokeColor">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>120</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="text">
-      <string>Stroke color</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_8">
+   <item row="2" column="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QgsDoubleSpinBox" name="spinSize">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="decimals">
+        <number>6</number>
+       </property>
+       <property name="maximum">
+        <double>99999999.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.200000000000000</double>
+       </property>
+       <property name="value">
+        <double>12.000000000000000</double>
+       </property>
+       <property name="showClearButton">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QgsUnitSelectionWidget" name="mSizeUnitWidget" native="true">
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>Join style</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="2">
-    <widget class="QComboBox" name="mHorizontalAnchorComboBox">
-     <item>
-      <property name="text">
-       <string>Left</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>HCenter</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Right</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Rotation</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="2">
-    <widget class="QComboBox" name="mVerticalAnchorComboBox">
-     <item>
-      <property name="text">
-       <string>Top</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>VCenter</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Bottom</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="3" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mColorDDBtn">
-     <property name="text">
-      <string>…</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mHorizontalAnchorDDBtn">
-     <property name="text">
-      <string>…</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mOffsetDDBtn">
-     <property name="text">
-      <string>…</string>
+      <string>Offset</string>
      </property>
     </widget>
    </item>
@@ -352,6 +307,65 @@
      </property>
     </widget>
    </item>
+   <item row="3" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mColorDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="1" colspan="2">
+    <widget class="QLineEdit" name="mCharLineEdit">
+     <property name="toolTip">
+      <string>Type in characters directly, or enter a character's hexadecimal value.</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mHorizontalAnchorDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="1" colspan="2">
+    <widget class="QLineEdit" name="mCharPreview">
+     <property name="toolTip">
+      <string>Type in characters directly, or enter a character's hexadecimal value.</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mOffsetDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mStrokeColorDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>Fill color</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mSizeDDBtn">
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+   </item>
    <item row="11" column="4">
     <widget class="QgsPropertyOverrideButton" name="mVerticalAnchorDDBtn">
      <property name="text">
@@ -359,24 +373,23 @@
      </property>
     </widget>
    </item>
-   <item row="15" column="0">
-    <widget class="QLabel" name="label_12">
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Character(s)</string>
+      <string>Size</string>
      </property>
     </widget>
    </item>
-   <item row="15" column="1" colspan="2">
-    <widget class="QLineEdit" name="mCharLineEdit">
-     <property name="toolTip">
-      <string>Type in characters directly, or enter a character's hexadecimal value.</string>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_9">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-    </widget>
-   </item>
-   <item row="15" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mCharDDBtn">
      <property name="text">
-      <string>…</string>
+      <string>Stroke color</string>
      </property>
     </widget>
    </item>
@@ -387,7 +400,33 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="0" colspan="5">
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Rotation</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="2">
+    <widget class="QComboBox" name="mHorizontalAnchorComboBox">
+     <item>
+      <property name="text">
+       <string>Left</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>HCenter</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Right</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="15" column="0" colspan="5">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0" rowspan="2">
       <widget class="QgsScrollArea" name="scrollArea">
@@ -424,17 +463,10 @@
      </item>
     </layout>
    </item>
-   <item row="7" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mJoinStyleDDBtn">
+   <item row="0" column="0">
+    <widget class="QLabel" name="lblFamily">
      <property name="text">
-      <string>…</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="mStrokeWidthLabel">
-     <property name="text">
-      <string>Stroke width</string>
+      <string>Font family</string>
      </property>
     </widget>
    </item>
@@ -463,7 +495,7 @@
        <property name="value">
         <double>0.200000000000000</double>
        </property>
-       <property name="showClearButton" stdset="0">
+       <property name="showClearButton">
         <bool>false</bool>
        </property>
       </widget>
@@ -483,66 +515,41 @@
      </item>
     </layout>
    </item>
-   <item row="7" column="2">
-    <widget class="QgsPenJoinStyleComboBox" name="cboJoinStyle"/>
+   <item row="11" column="0" rowspan="4">
+    <widget class="QLabel" name="mAnchorPointLabel">
+     <property name="text">
+      <string>Anchor point</string>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QgsDoubleSpinBox" name="spinSize">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="decimals">
-        <number>6</number>
-       </property>
-       <property name="maximum">
-        <double>99999999.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.200000000000000</double>
-       </property>
-       <property name="value">
-        <double>12.000000000000000</double>
-       </property>
-       <property name="showClearButton" stdset="0">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QgsUnitSelectionWidget" name="mSizeUnitWidget" native="true">
-       <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>Join style</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="4">
-    <widget class="QgsPropertyOverrideButton" name="mSizeDDBtn">
+   <item row="0" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mFontFamilyDDBtn">
      <property name="text">
       <string>…</string>
      </property>
     </widget>
    </item>
-   <item row="16" column="1" colspan="2">
-    <widget class="QLineEdit" name="mCharPreview">
-     <property name="toolTip">
-      <string>Type in characters directly, or enter a character's hexadecimal value.</string>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
+   <item row="7" column="4">
+    <widget class="QgsPropertyOverrideButton" name="mJoinStyleDDBtn">
+     <property name="text">
+      <string>…</string>
      </property>
     </widget>
    </item>
-   <item row="16" column="0">
-    <widget class="QLabel" name="label_13">
+   <item row="13" column="2">
+    <widget class="QCheckBox" name="mBaselineAsCenter">
      <property name="text">
-      <string>Preview</string>
+      <string>Use baseline as center (instead of middle)</string>
      </property>
     </widget>
    </item>
@@ -550,15 +557,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QgsColorButton</class>
+   <extends>QToolButton</extends>
+   <header>qgscolorbutton.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>QgsDoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header>qgsdoublespinbox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QgsScrollArea</class>
-   <extends>QScrollArea</extends>
-   <header>qgsscrollarea.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>QgsPropertyOverrideButton</class>
@@ -566,9 +573,9 @@
    <header>qgspropertyoverridebutton.h</header>
   </customwidget>
   <customwidget>
-   <class>QgsColorButton</class>
-   <extends>QToolButton</extends>
-   <header>qgscolorbutton.h</header>
+   <class>QgsScrollArea</class>
+   <extends>QScrollArea</extends>
+   <header>qgsscrollarea.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

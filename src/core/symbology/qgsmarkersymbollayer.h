@@ -845,6 +845,7 @@ class CORE_EXPORT QgsRasterMarkerSymbolLayer : public QgsMarkerSymbolLayer
 #define DEFAULT_FONTMARKER_BORDERCOLOR  QColor(Qt::white)
 #define DEFAULT_FONTMARKER_JOINSTYLE    Qt::MiterJoin
 #define DEFAULT_FONTMARKER_ANGLE  0
+#define DEFAULT_BASELINE_AS_CENTER false
 
 /**
  * \ingroup core
@@ -859,7 +860,8 @@ class CORE_EXPORT QgsFontMarkerSymbolLayer : public QgsMarkerSymbolLayer
                               QString chr = DEFAULT_FONTMARKER_CHR,
                               double pointSize = DEFAULT_FONTMARKER_SIZE,
                               const QColor &color = DEFAULT_FONTMARKER_COLOR,
-                              double angle = DEFAULT_FONTMARKER_ANGLE );
+                              double angle = DEFAULT_FONTMARKER_ANGLE,
+                              const bool baselineAsCenter = DEFAULT_BASELINE_AS_CENTER );
 
     ~QgsFontMarkerSymbolLayer() override;
 
@@ -1026,6 +1028,21 @@ class CORE_EXPORT QgsFontMarkerSymbolLayer : public QgsMarkerSymbolLayer
     */
     void setPenJoinStyle( Qt::PenJoinStyle style ) { mPenJoinStyle = style; }
 
+    /**
+     * Set the baseline as center of the font
+     * \param baselineAsCenter the bool
+     * \see baseLineAsCenter()
+     * \since QGIS 3.42
+     */
+    void setBaselineAsCenter( const bool baselineAsCenter ) { mBaselineAsCenter = baselineAsCenter;}
+
+    /**
+     * Returns wheter the baseline should be handled as center
+     * \see setBaseLineAsCenter()
+     * \since QGIS 3.42
+     */
+    bool baselineAsCenter() const { return mBaselineAsCenter; }
+
     QRectF bounds( QPointF point, QgsSymbolRenderContext &context ) override;
 
   private:
@@ -1039,6 +1056,7 @@ class CORE_EXPORT QgsFontMarkerSymbolLayer : public QgsMarkerSymbolLayer
 
     double mChrWidth = 0;
     QPointF mChrOffset;
+    bool mBaselineAsCenter = false;
     //! Scaling for font sizes, used if font size grows too large
     double mFontSizeScale = 1.0;
     double mOrigSize;

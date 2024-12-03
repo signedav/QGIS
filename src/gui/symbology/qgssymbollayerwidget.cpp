@@ -3579,6 +3579,7 @@ QgsFontMarkerSymbolLayerWidget::QgsFontMarkerSymbolLayerWidget( QgsVectorLayer *
   connect( spinOffsetY, static_cast < void ( QDoubleSpinBox::* )( double ) > ( &QDoubleSpinBox::valueChanged ), this, &QgsFontMarkerSymbolLayerWidget::setOffset );
   connect( widgetChar, &CharacterWidget::characterSelected, this, &QgsFontMarkerSymbolLayerWidget::setCharacter );
   connect( mCharLineEdit, &QLineEdit::textChanged, this, &QgsFontMarkerSymbolLayerWidget::setCharacterFromText );
+  connect( mBaselineAsCenter, &QCheckBox::toggled, this, &QgsFontMarkerSymbolLayerWidget::setBaselineAsCenter );
 
   connect( this, &QgsSymbolLayerWidget::changed, this, &QgsFontMarkerSymbolLayerWidget::updateAssistantSymbol );
 }
@@ -3617,6 +3618,8 @@ void QgsFontMarkerSymbolLayerWidget::setSymbolLayer( QgsSymbolLayer *layer )
   widgetChar->blockSignals( false );
   whileBlocking( mCharLineEdit )->setText( mLayer->character() );
   mCharPreview->setFont( mRefFont );
+
+  whileBlocking( mBaselineAsCenter )->setChecked( mLayer->baselineAsCenter() );
 
   //block
   whileBlocking( spinOffsetX )->setValue( mLayer->offset().x() );
@@ -3747,6 +3750,12 @@ void QgsFontMarkerSymbolLayerWidget::setCharacterFromText( const QString &text )
     }
     emit changed();
   }
+}
+
+void QgsFontMarkerSymbolLayerWidget::setBaselineAsCenter( const bool baselineAsCenter )
+{
+  mLayer->setBaselineAsCenter( baselineAsCenter );
+  emit changed();
 }
 
 void QgsFontMarkerSymbolLayerWidget::setCharacter( QChar chr )
