@@ -160,7 +160,7 @@ QgsRelationReferenceWidget::~QgsRelationReferenceWidget()
   unsetMapTool();
 }
 
-void QgsRelationReferenceWidget::setRelation( const QgsRelation &relation, bool allowNullValue )
+void QgsRelationReferenceWidget::setRelation( const QgsRelation &relation, bool allowNullValue, const QString &orderExpression, bool orderDescending )
 {
   mAllowNull = allowNullValue;
   mRemoveFKButton->setVisible( allowNullValue && mReadOnlySelector );
@@ -177,6 +177,9 @@ void QgsRelationReferenceWidget::setRelation( const QgsRelation &relation, bool 
     mReferencingLayer = relation.referencingLayer();
     mReferencedLayer = relation.referencedLayer();
 
+    mOrderExpression = orderExpression;
+    mOrderDescending = orderDescending;
+
     const QList<QgsRelation::FieldPair> fieldPairs = relation.fieldPairs();
     for ( const QgsRelation::FieldPair &fieldPair : fieldPairs )
     {
@@ -189,6 +192,8 @@ void QgsRelationReferenceWidget::setRelation( const QgsRelation &relation, bool 
       mComboBox->setIdentifierFields( mReferencedFields );
       mComboBox->setFilterExpression( mFilterExpression );
       mComboBox->setFetchLimit( mFetchLimit );
+      mComboBox->setOrderExpression( mOrderExpression );
+      mComboBox->setOrderDescending( mOrderDescending );
     }
     mAttributeEditorFrame->setObjectName( QStringLiteral( "referencing/" ) + relation.name() );
 
@@ -483,6 +488,8 @@ void QgsRelationReferenceWidget::init()
 
     mComboBox->setSourceLayer( mReferencedLayer );
     mComboBox->setDisplayExpression( mReferencedLayer->displayExpression() );
+    mComboBox->setOrderExpression( mOrderExpression );
+    mComboBox->setOrderDescending( mOrderDescending );
     mComboBox->setAllowNull( mAllowNull );
     mComboBox->setIdentifierFields( mReferencedFields );
     mComboBox->setFetchLimit( mFetchLimit );
