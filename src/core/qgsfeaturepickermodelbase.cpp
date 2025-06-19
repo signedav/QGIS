@@ -304,11 +304,44 @@ void QgsFeaturePickerModelBase::updateCompleter()
     // We got strings for a filter selection
     if ( mOrderDescending )
     {
-      std::sort( entries.begin(), entries.end(), []( const QgsFeatureExpressionValuesGatherer::Entry & a, const QgsFeatureExpressionValuesGatherer::Entry & b ) { return a.orderValue.localeAwareCompare( b.orderValue ) > 0; } );
+      std::sort( entries.begin(), entries.end(), []( const QgsFeatureExpressionValuesGatherer::Entry & a, const QgsFeatureExpressionValuesGatherer::Entry & b )
+      {
+
+        bool ok;
+        double a_d = a.orderValue.toDouble( &ok );
+        if ( ok )
+        {
+          double b_d = b.orderValue.toDouble( &ok );
+          if ( ok )
+          {
+            return a_d > b_d;
+          }
+        }
+
+        return a.orderValue.localeAwareCompare( b.orderValue ) > 0;
+
+      } );
     }
     else
     {
-      std::sort( entries.begin(), entries.end(), []( const QgsFeatureExpressionValuesGatherer::Entry & a, const QgsFeatureExpressionValuesGatherer::Entry & b ) { return a.orderValue.localeAwareCompare( b.orderValue ) < 0; } );
+      std::sort( entries.begin(), entries.end(), []( const QgsFeatureExpressionValuesGatherer::Entry & a, const QgsFeatureExpressionValuesGatherer::Entry & b )
+      {
+
+        bool ok;
+        double a_d = a.orderValue.toDouble( &ok );
+        if ( ok )
+        {
+          double b_d = b.orderValue.toDouble( &ok );
+          if ( ok )
+          {
+            return a_d < b_d;
+          }
+        }
+
+        return a.orderValue.localeAwareCompare( b.orderValue ) < 0;
+
+      } );
+
     }
 
     if ( mAllowNull && mSourceLayer )

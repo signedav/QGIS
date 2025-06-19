@@ -72,7 +72,7 @@ void TestQgsRelationEditorWidget::init()
   mLayer1->setDisplayExpression( QStringLiteral( "'Layer1-' || pk" ) );
   QgsProject::instance()->addMapLayer( mLayer1.get(), false, false );
 
-  mLayer2.reset( new QgsVectorLayer( QStringLiteral( "LineString?field=pk:int" ), QStringLiteral( "vl2" ), QStringLiteral( "memory" ) ) );
+  mLayer2.reset( new QgsVectorLayer( QStringLiteral( "LineString?field=pk:int&field=value1:string&field=value2:int" ), QStringLiteral( "vl2" ), QStringLiteral( "memory" ) ) );
   mLayer2->setDisplayExpression( QStringLiteral( "'Layer2-' || pk" ) );
   QgsProject::instance()->addMapLayer( mLayer2.get(), false, false );
 
@@ -126,18 +126,24 @@ void TestQgsRelationEditorWidget::init()
 
   QgsFeature ft2( mLayer2->fields() );
   ft2.setAttribute( QStringLiteral( "pk" ), 10 );
+  ft2.setAttribute( QStringLiteral( "value1" ), QStringLiteral( "c-team" ) );
+  ft2.setAttribute( QStringLiteral( "value2" ), 2 );
   mLayer2->startEditing();
   mLayer2->addFeature( ft2 );
   mLayer2->commitChanges();
 
   QgsFeature ft3( mLayer2->fields() );
   ft3.setAttribute( QStringLiteral( "pk" ), 11 );
+  ft2.setAttribute( QStringLiteral( "value1" ), QStringLiteral( "a-team" ) );
+  ft2.setAttribute( QStringLiteral( "value2" ), 3 );
   mLayer2->startEditing();
   mLayer2->addFeature( ft3 );
   mLayer2->commitChanges();
 
   QgsFeature ft4( mLayer2->fields() );
   ft4.setAttribute( QStringLiteral( "pk" ), 12 );
+  ft2.setAttribute( QStringLiteral( "value1" ), QStringLiteral( "b-team" ) );
+  ft2.setAttribute( QStringLiteral( "value2" ), 1 );
   mLayer2->startEditing();
   mLayer2->addFeature( ft4 );
   mLayer2->commitChanges();

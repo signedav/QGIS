@@ -480,6 +480,9 @@ void QgsRelationReferenceWidget::init()
           disableChainedComboBoxes( cb );
         }
       }
+
+      mComboBox->setOrderExpression( mOrderExpression );
+      mComboBox->setOrderDescending( mOrderDescending );
     }
     else
     {
@@ -488,8 +491,6 @@ void QgsRelationReferenceWidget::init()
 
     mComboBox->setSourceLayer( mReferencedLayer );
     mComboBox->setDisplayExpression( mReferencedLayer->displayExpression() );
-    mComboBox->setOrderExpression( mOrderExpression );
-    mComboBox->setOrderDescending( mOrderDescending );
     mComboBox->setAllowNull( mAllowNull );
     mComboBox->setIdentifierFields( mReferencedFields );
     mComboBox->setFetchLimit( mFetchLimit );
