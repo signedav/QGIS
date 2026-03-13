@@ -1309,6 +1309,32 @@ void QgsAttributeForm::updateLabels()
       }
     }
   }
+  if ( !mCustomCommentDataDefinedProperties.isEmpty() )
+  {
+    QgsFeature currentFeature;
+    if ( currentFormValuesFeature( currentFeature ) )
+    {
+      QgsExpressionContext context = createExpressionContext( currentFeature );
+
+      for ( auto it = mCustomCommentDataDefinedProperties.constBegin(); it != mCustomCommentDataDefinedProperties.constEnd(); ++it )
+      {
+        QLabel *label { it.key() };
+        bool ok;
+        const QString value { it->valueAsString( context, QString(), &ok ) };
+        if ( ok && !value.isEmpty() )
+        {
+          const QString fieldName = label->objectName();
+          const QgsFields fields = mLayer->fields();
+          int idx = fields.lookupField( fieldName );
+
+          if ( idx >= 0 )
+          {
+            label->setToolTip( QgsFieldModel::fieldToolTipExtended( fields.at( idx ), mLayer, value ) );
+          }
+        }
+      }
+    }
+  }
 }
 
 void QgsAttributeForm::updateEditableState()
@@ -2090,12 +2116,22 @@ void QgsAttributeForm::init()
           if ( fieldIdx >= 0 && fieldIdx < mLayer->fields().count() )
           {
             const QString fieldName { mLayer->fields().at( fieldIdx ).name() };
+            label->setObjectName( fieldName );
+
             if ( mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).hasProperty( QgsEditFormConfig::DataDefinedProperty::Alias ) )
             {
               const QgsProperty property { mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).property( QgsEditFormConfig::DataDefinedProperty::Alias ) };
               if ( property.isActive() )
               {
                 mLabelDataDefinedProperties[label] = property;
+              }
+            }
+            if ( mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).hasProperty( QgsEditFormConfig::DataDefinedProperty::CustomComment ) )
+            {
+              const QgsProperty property { mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).property( QgsEditFormConfig::DataDefinedProperty::CustomComment ) };
+              if ( property.isActive() )
+              {
+                mCustomCommentDataDefinedProperties[label] = property;
               }
             }
             if ( mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).hasProperty( QgsEditFormConfig::DataDefinedProperty::Editable ) )
@@ -2202,6 +2238,8 @@ void QgsAttributeForm::init()
 
       // This will also create the widget
       QLabel *label = new QLabel( labelText );
+      label->setObjectName( field.name() );
+
       label->setToolTip( QgsFieldModel::fieldToolTipExtended( field, mLayer ) );
       QSvgWidget *i = new QSvgWidget();
       i->setFixedSize( 18, 18 );
@@ -2212,6 +2250,14 @@ void QgsAttributeForm::init()
         if ( property.isActive() )
         {
           mLabelDataDefinedProperties[label] = property;
+        }
+      }
+      if ( mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).hasProperty( QgsEditFormConfig::DataDefinedProperty::CustomComment ) )
+      {
+        const QgsProperty property { mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).property( QgsEditFormConfig::DataDefinedProperty::CustomComment ) };
+        if ( property.isActive() )
+        {
+          mCustomCommentDataDefinedProperties[label] = property;
         }
       }
 
@@ -2827,6 +2873,8 @@ QgsAttributeForm::WidgetInfo QgsAttributeForm::createWidgetFromDef( const QgsAtt
             if ( fldIdx < fields.count() && fldIdx >= 0 )
             {
               const QString fieldName { fields.at( fldIdx ).name() };
+              mypLabel->setObjectName( fieldName );
+
               if ( mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).hasProperty( QgsEditFormConfig::DataDefinedProperty::Alias ) )
               {
                 const QgsProperty property { mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).property( QgsEditFormConfig::DataDefinedProperty::Alias ) };
@@ -2841,6 +2889,14 @@ QgsAttributeForm::WidgetInfo QgsAttributeForm::createWidgetFromDef( const QgsAtt
                 if ( property.isActive() )
                 {
                   mEditableDataDefinedProperties[widgetInfo.widget] = property;
+                }
+              }
+              if ( mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).hasProperty( QgsEditFormConfig::DataDefinedProperty::CustomComment ) )
+              {
+                const QgsProperty property { mLayer->editFormConfig().dataDefinedFieldProperties( fieldName ).property( QgsEditFormConfig::DataDefinedProperty::CustomComment ) };
+                if ( property.isActive() )
+                {
+                  mCustomCommentDataDefinedProperties[mypLabel] = property;
                 }
               }
             }
@@ -2919,7 +2975,6 @@ QgsAttributeForm::WidgetInfo QgsAttributeForm::createWidgetFromDef( const QgsAtt
     case Qgis::AttributeEditorType::QmlElement:
     {
       const QgsAttributeEditorQmlElement *elementDef = static_cast<const QgsAttributeEditorQmlElement *>( widgetDef );
-
       QgsQmlWidgetWrapper *qmlWrapper = new QgsQmlWidgetWrapper( mLayer, nullptr, this );
       qmlWrapper->setQmlCode( elementDef->qmlCode() );
       context.setAttributeFormMode( mMode );

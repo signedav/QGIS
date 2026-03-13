@@ -125,6 +125,13 @@ QgsAttributeTypeDialog::QgsAttributeTypeDialog( QgsVectorLayer *vl, int fieldIdx
     mDataDefinedProperties.setProperty( QgsEditFormConfig::DataDefinedProperty::Alias, mAliasExpressionButton->toProperty() );
   } );
 
+  mCustomCommentExpressionButton->registerExpressionContextGenerator( this );
+  mCustomCommentExpressionButton->init( static_cast<int>( QgsEditFormConfig::DataDefinedProperty::CustomComment ), mDataDefinedProperties.property( QgsEditFormConfig::DataDefinedProperty::CustomComment ), vl->editFormConfig().propertyDefinitions(), vl );
+  connect( mCustomCommentExpressionButton, &QgsPropertyOverrideButton::changed, this, [this] {
+    mDataDefinedProperties.setProperty( QgsEditFormConfig::DataDefinedProperty::CustomComment, mCustomCommentExpressionButton->toProperty() );
+  } );
+
+
   connect( mExpressionWidget, &QgsExpressionLineEdit::expressionChanged, this, &QgsAttributeTypeDialog::defaultExpressionChanged );
   connect( mUniqueCheckBox, &QCheckBox::toggled, this, [this]( bool checked ) {
     mCheckBoxEnforceUnique->setEnabled( checked );
@@ -541,6 +548,10 @@ void QgsAttributeTypeDialog::setDataDefinedProperties( const QgsPropertyCollecti
   if ( properties.hasProperty( QgsEditFormConfig::DataDefinedProperty::Editable ) )
   {
     mEditableExpressionButton->setToProperty( properties.property( QgsEditFormConfig::DataDefinedProperty::Editable ) );
+  }
+  if ( properties.hasProperty( QgsEditFormConfig::DataDefinedProperty::CustomComment ) )
+  {
+    mCustomCommentExpressionButton->setToProperty( properties.property( QgsEditFormConfig::DataDefinedProperty::CustomComment ) );
   }
 }
 
