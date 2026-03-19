@@ -74,7 +74,6 @@ class QgsEditFormConfigPrivate : public QSharedData
                                  QObject::tr( "CustomComment" ),
                                  QgsPropertyDefinition::String )
         },
-      };
       return sPropertyDefinitions;
     };
 
