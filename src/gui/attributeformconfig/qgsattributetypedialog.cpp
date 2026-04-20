@@ -84,10 +84,7 @@ QgsAttributeTypeDialog::QgsAttributeTypeDialog( QgsVectorLayer *vl, int fieldIdx
   const QIcon clearIcon = QgsApplication::getThemeIcon( "/mIconClearText.svg" );
   mClearAction = new QAction( clearIcon, tr( "clear" ), this );
   mClearAction->setCheckable( false );
-  connect( mClearAction, &QAction::triggered, this, [this]() {
-    // Reset custom comment to provider comment
-    setComment( mComment );
-  } );
+  connect( mClearAction, &QAction::triggered, this, [this]() { mDisplayedComment->setText( mComment ); } );
   connect( mDisplayedComment, &QLineEdit::textChanged, this, [this]( const QString &text ) {
     // The clear button should only be visible when there is a (possibly empty) custom comment
     bool isActionAdded = mDisplayedComment->actions().contains( mClearAction );
@@ -105,6 +102,7 @@ QgsAttributeTypeDialog::QgsAttributeTypeDialog( QgsVectorLayer *vl, int fieldIdx
         mDisplayedComment->removeAction( mClearAction );
       }
     }
+    updateCustomComment();
   } );
 
   mExpressionWidget->registerExpressionContextGenerator( this );
@@ -504,6 +502,7 @@ void QgsAttributeTypeDialog::setMergePolicy( Qgis::FieldDomainMergePolicy policy
 Qgis::FieldDomainMergePolicy QgsAttributeTypeDialog::mergePolicy() const
 {
   return mMergePolicyComboBox->currentData().value<Qgis::FieldDomainMergePolicy>();
+  setDisplayedComment
 }
 
 QString QgsAttributeTypeDialog::constraintExpression() const
@@ -526,20 +525,44 @@ QString QgsAttributeTypeDialog::alias() const
   return mAlias->text();
 }
 
-void QgsAttributeTypeDialog::setDisplayedComment( const QString &customComment )
+void QgsAttributeTypeDialog::setCustomComment( const QString &customComment )
 {
-  if ( customComment.isNull() )
-    mDisplayedComment->setText( mComment );
-  else
-    mDisplayedComment->setText( customComment );
+  if ( mCustomComment == customComment )
+    return;
+
+  mCustomComment = customComment;
+  updateDisplayedComment();
 }
 
 QString QgsAttributeTypeDialog::customComment() const
 {
-  if ( mDisplayedComment->text() == mComment )
-    return QString();
-  return mDisplayedComment->text();
+  return mCustomComment;
 }
+
+void QgsAttributeTypeDialog::updateDisplayedComment()
+{
+  if ( mCustomComment.isNull() )
+  {
+    mDisplayedComment->setText( mComment );
+  }
+  else
+  {
+    mDisplayedComment->setText( mCustomComment );
+  }
+}
+
+void QgsAttributeTypeDialog::updateCustomComment()
+{
+  if ( mDisplayedComment->text() == mComment )
+  {
+    mCustomComment = QString();
+  }
+  else
+  {
+    mCustomComment = mDisplayedComment;
+  }
+}
+
 
 void QgsAttributeTypeDialog::setDataDefinedProperties( const QgsPropertyCollection &properties )
 {
@@ -561,7 +584,8 @@ void QgsAttributeTypeDialog::setDataDefinedProperties( const QgsPropertyCollecti
 void QgsAttributeTypeDialog::setComment( const QString &comment )
 {
   mComment = comment;
-  mDisplayedComment->setText( mComment );
+
+  updateDisplayedComment();
 }
 
 void QgsAttributeTypeDialog::setLabelOnTop( bool onTop )
