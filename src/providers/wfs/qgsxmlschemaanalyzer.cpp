@@ -819,6 +819,7 @@ bool QgsXmlSchemaAnalyzer::readAttributesFromSchemaWithoutGMLAS(
   }
 
   bool foundGeometryAttribute = false;
+  bool foundAnyOtherAttribute = false;
 
   for ( int i = 0; i < attributeNodeList.size(); ++i )
   {
@@ -831,6 +832,11 @@ bool QgsXmlSchemaAnalyzer::readAttributesFromSchemaWithoutGMLAS(
     // I'm not completely sure how legal this
     // is but this validates with Xerces 3.1, and its schema analyzer does also the trimming.
     name = name.trimmed();
+
+    if ( !name.isEmpty() )
+    {
+      foundAnyOtherAttribute = true;
+    }
 
     //attribute type
     QString type = attributeElement.attribute( u"type"_s );
@@ -913,6 +919,12 @@ bool QgsXmlSchemaAnalyzer::readAttributesFromSchemaWithoutGMLAS(
   }
   if ( !foundGeometryAttribute )
   {
+    if ( !foundAnyOtherAttribute )
+    {
+      errorMsg = QObject::tr( "Cannot find any attribute elements or geometries" );
+      mayTryWithGMLAS = true;
+      return false;
+    }
     geomType = Qgis::WkbType::NoGeometry;
   }
 
