@@ -305,7 +305,7 @@ void QgsGeometryValidationService::enableLayerChecks( QgsVectorLayer *layer )
       onGeometryChanged( layer, fid, geometry );
     } );
     checkInformation.connections << connect( layer, &QgsVectorLayer::featureDeleted, this, [this, layer]( QgsFeatureId fid ) { onFeatureDeleted( layer, fid ); } );
-    checkInformation.connections << connect( layer, &QgsVectorLayer::beforeCommitChanges, this, [this, layer]( bool stopEditing ) { onBeforeCommitChanges( layer, stopEditing ); } );
+    checkInformation.connections << connect( layer, &QgsVectorLayer::beforeCommitChecks, this, [this, layer]( bool stopEditing ) { onBeforeCommitChanges( layer, stopEditing ); } );
     checkInformation.connections << connect( layer, &QgsVectorLayer::editingStopped, this, [this, layer]() { onEditingStopped( layer ); } );
   }
 }

@@ -112,9 +112,24 @@ void QgsTransactionGroup::onBeforeCommitChanges( bool stopEditing )
   if ( mEditingStopping )
     return;
 
-  mEditingStopping = true;
+  QgsVectorLayer *triggeringLayer = qobject_cast<QgsVectorLayer *>( sender() );
 
-  const QgsVectorLayer *triggeringLayer = qobject_cast<QgsVectorLayer *>( sender() );
+  // checks have to be done for all the layers
+  for ( QgsVectorLayer *layer : mLayers )
+  {
+    emit layer->beforeCommitChecks( stopEditing );
+  }
+
+  for ( QgsVectorLayer *layer : mLayers )
+  {
+    if ( !layer->allowCommit() )
+    {
+      //if one layer does not allow, we cannot commit
+      return;
+    }
+  }
+
+  mEditingStopping = true;
 
   QString errMsg;
   if ( mTransaction->commit( errMsg ) )
