@@ -83,8 +83,8 @@ QWidget *QgsRangeWidgetWrapper::createWidget( QWidget *parent )
 
       case QMetaType::Type::Int:
       default:
-        editor = new QgsSpinBox( parent );
-        static_cast<QgsSpinBox *>( editor )->setLineEditAlignment( Qt::AlignRight );
+        editor = new QgsTolerantSpinBox( parent );
+        static_cast<QgsTolerantSpinBox *>( editor )->setLineEditAlignment( Qt::AlignRight );
         break;
     }
   }
@@ -113,7 +113,7 @@ template<class T> static void setupVariantEditor( const QVariant &min, const QVa
 void QgsRangeWidgetWrapper::initWidget( QWidget *editor )
 {
   mDoubleSpinBox = qobject_cast<QDoubleSpinBox *>( editor );
-  mIntSpinBox = qobject_cast<QSpinBox *>( editor );
+  mIntSpinBox = qobject_cast<QgsTolerantSpinBox *>( editor );
 
   mDial = qobject_cast<QDial *>( editor );
   mSlider = qobject_cast<QSlider *>( editor );
@@ -174,7 +174,7 @@ void QgsRangeWidgetWrapper::initWidget( QWidget *editor )
   }
   else if ( mIntSpinBox )
   {
-    QgsSpinBox *qgsWidget = qobject_cast<QgsSpinBox *>( mIntSpinBox );
+    QgsTolerantSpinBox *qgsWidget = qobject_cast<QgsTolerantSpinBox *>( mIntSpinBox );
     if ( qgsWidget )
       qgsWidget->setShowClearButton( allowNull );
     int minval = min.isValid() ? min.toInt() : std::numeric_limits<int>::lowest();
@@ -189,7 +189,7 @@ void QgsRangeWidgetWrapper::initWidget( QWidget *editor )
         minval = minvalOverflow;
       }
       mIntSpinBox->setValue( minval );
-      QgsSpinBox *intSpinBox( qobject_cast<QgsSpinBox *>( mIntSpinBox ) );
+      QgsTolerantSpinBox *intSpinBox( qobject_cast<QgsTolerantSpinBox *>( mIntSpinBox ) );
       if ( intSpinBox )
         intSpinBox->setSpecialValueText( QgsApplication::nullRepresentation() );
       else
@@ -321,7 +321,7 @@ void QgsRangeWidgetWrapper::updateValues( const QVariant &value, const QVariantL
     }
     else
     {
-      mIntSpinBox->setValue( value.toInt() );
+      mIntSpinBox->setTolerantValue( value.toInt() );
     }
   }
 
@@ -359,4 +359,70 @@ void QgsRangeWidgetWrapper::setEnabled( bool enabled )
   {
     QgsEditorWidgetWrapper::setEnabled( enabled );
   }
+}
+
+QgsTolerantSpinBox::QgsTolerantSpinBox( QWidget *parent )
+  : QgsSpinBox( parent )
+{
+  connect( this, &QgsTolerantSpinBox::textEdited, this, [this]( const QString text ) {
+    qDebug() << "Edited text to " << text;
+    qDebug() << "min is " << minimum() << " and val is " << QgsSpinBox::valueFromText( text ) << " and max is " << maximum();
+    if ( QgsSpinBox::valueFromText( text ) < minimum() || QgsSpinBox::valueFromText( text ) > maximum() )
+    {
+      setStyleSheet( u"QWidget {color: rgb(255, 0, 0);}"_s );
+    }
+    else
+    {
+      setStyleSheet( u"QWidget {color: rgb(0, 0, 0);}"_s );
+    }
+    //soll hier noch nicht gemacht werden, sonst kann es keine expressions eingeben etc.
+    //updateTolerantValue(QgsSpinBox::valueFromText(text));
+  } );
+}
+
+
+QString QgsTolerantSpinBox::textFromValue( int val ) const
+{
+  Q_UNUSED( val );
+  qDebug() << "Return " << mTolerantlValue;
+  return QString::number( mTolerantlValue );
+}
+
+void QgsTolerantSpinBox::stepBy( int steps )
+{
+  QgsSpinBox::stepBy( steps );
+  setTolerantValue( QSpinBox::value() );
+}
+
+void QgsTolerantSpinBox::setTolerantValue( int val )
+{
+  qDebug() << "set the original value (" << mTolerantlValue << ") to " << val;
+  mTolerantlValue = val;
+  QSpinBox::setValue( val );
+}
+
+void QgsTolerantSpinBox::updateTolerantValue( int val )
+{
+  setTolerantValue( val );
+  //we have to emit the valueChanged because on just clamp after leaving focus it would not save otherwise (even thought it changed the value visually
+  emit valueChanged( val );
+}
+
+int QgsTolerantSpinBox::value() const
+{
+  qDebug() << "Return as value this: " << mTolerantlValue << " and not maybe this " << QgsSpinBox::value();
+  return mTolerantlValue;
+}
+
+void QgsTolerantSpinBox::focusOutEvent( QFocusEvent *event )
+{
+  qDebug() << "Let's get out. And set the value to " << QSpinBox::value();
+  updateTolerantValue( QSpinBox::value() );
+  QgsSpinBox::focusOutEvent( event );
+}
+
+void QgsTolerantSpinBox::wheelEvent( QWheelEvent *event )
+{
+  QgsSpinBox::wheelEvent( event );
+  setTolerantValue( QSpinBox::value() );
 }

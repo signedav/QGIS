@@ -18,6 +18,7 @@
 
 #include "qgis_gui.h"
 #include "qgseditorwidgetwrapper.h"
+#include "qgsspinbox.h"
 
 #include <QDoubleSpinBox>
 #include <QSpinBox>
@@ -44,6 +45,35 @@ class TestQgsRangeWidgetWrapper;
  * </ul>
  * \note not available in Python bindings
  */
+
+
+class GUI_EXPORT QgsTolerantSpinBox : public QgsSpinBox
+{
+    Q_OBJECT
+  public:
+    /**
+     * Constructor for QgsTolerantSpinBox.
+     * \param parent parent widget
+     */
+    explicit QgsTolerantSpinBox( QWidget *parent SIP_TRANSFERTHIS = nullptr );
+
+    QString textFromValue( int val ) const override;
+
+    void stepBy( int steps ) override;
+
+    int value() const;
+
+  public slots:
+    void setTolerantValue( int val );
+    void updateTolerantValue( int val );
+
+  protected:
+    void focusOutEvent( QFocusEvent *event ) override;
+    void wheelEvent( QWheelEvent *event ) override;
+
+  private:
+    int mTolerantlValue = 0;
+};
 
 class GUI_EXPORT QgsRangeWidgetWrapper : public QgsEditorWidgetWrapper
 {
@@ -90,7 +120,7 @@ class GUI_EXPORT QgsRangeWidgetWrapper : public QgsEditorWidgetWrapper
   private:
     void updateValues( const QVariant &value, const QVariantList & = QVariantList() ) override;
 
-    QSpinBox *mIntSpinBox = nullptr;
+    QgsTolerantSpinBox *mIntSpinBox = nullptr;
     QDoubleSpinBox *mDoubleSpinBox = nullptr;
     QSlider *mSlider = nullptr;
     QDial *mDial = nullptr;
