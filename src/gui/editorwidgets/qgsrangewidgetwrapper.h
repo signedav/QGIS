@@ -17,7 +17,11 @@
 #define QGSRANGEWIDGETWRAPPER_H
 
 #include "qgis_gui.h"
+#include "qgsdial.h"
+#include "qgsdoublespinbox.h"
 #include "qgseditorwidgetwrapper.h"
+#include "qgsslider.h"
+#include "qgsspinbox.h"
 
 #include <QDoubleSpinBox>
 #include <QSpinBox>
@@ -44,6 +48,103 @@ class TestQgsRangeWidgetWrapper;
  * </ul>
  * \note not available in Python bindings
  */
+
+
+class GUI_EXPORT QgsTolerantSpinBox : public QgsSpinBox
+{
+    Q_OBJECT
+  public:
+    /**
+     * Constructor for QgsTolerantSpinBox.
+     * \param parent parent widget
+     */
+    explicit QgsTolerantSpinBox( QWidget *parent SIP_TRANSFERTHIS = nullptr );
+
+    QString textFromValue( int val ) const override;
+
+    void stepBy( int steps ) override;
+
+    //not an override
+    int value() const;
+
+  public slots:
+    void setTolerantValue( int val );
+
+  protected:
+    void focusOutEvent( QFocusEvent *event ) override;
+    void wheelEvent( QWheelEvent *event ) override;
+
+  private:
+    int mTolerantValue = 0;
+};
+
+
+class GUI_EXPORT QgsTolerantDoubleSpinBox : public QgsDoubleSpinBox
+{
+    Q_OBJECT
+  public:
+    /**
+     * Constructor for QgsTolerantDoubleSpinBox.
+     * \param parent parent widget
+     */
+    explicit QgsTolerantDoubleSpinBox( QWidget *parent SIP_TRANSFERTHIS = nullptr );
+
+    QString textFromValue( double val ) const override;
+
+    void stepBy( int steps ) override;
+
+    //not an override
+    double value() const;
+
+  public slots:
+    void setTolerantValue( double val );
+
+  protected:
+    void focusOutEvent( QFocusEvent *event ) override;
+    void wheelEvent( QWheelEvent *event ) override;
+
+  private:
+    double mTolerantValue = 0.0;
+};
+
+
+class GUI_EXPORT QgsTolerantSlider : public QgsSlider
+{
+    Q_OBJECT
+  public:
+    /**
+     * Constructor for QgsTolerantSlider.
+     * \param parent parent widget
+     */
+    QgsTolerantSlider( QWidget *parent SIP_TRANSFERTHIS = nullptr );
+
+    //! Constructor for QgsTolerantSlider
+    QgsTolerantSlider( Qt::Orientation orientation, QWidget *parent SIP_TRANSFERTHIS = nullptr );
+
+    QVariant variantValue() const override;
+
+  public slots:
+    void setTolerantValue( const QVariant &val );
+
+  private:
+    QVariant mTolerantValue;
+};
+
+class GUI_EXPORT QgsTolerantDial : public QgsDial
+{
+    Q_OBJECT
+  public:
+    //! Constructor for QgsTolerantDial
+    explicit QgsTolerantDial( QWidget *parent SIP_TRANSFERTHIS = nullptr );
+    QVariant variantValue() const override;
+
+  public slots:
+    void setTolerantValue( const QVariant &val );
+
+  private:
+    QVariant mTolerantValue;
+};
+
 
 class GUI_EXPORT QgsRangeWidgetWrapper : public QgsEditorWidgetWrapper
 {
@@ -91,11 +192,15 @@ class GUI_EXPORT QgsRangeWidgetWrapper : public QgsEditorWidgetWrapper
     void updateValues( const QVariant &value, const QVariantList & = QVariantList() ) override;
 
     QSpinBox *mIntSpinBox = nullptr;
+    QgsTolerantSpinBox *mQgsTolerantIntSpinBox = nullptr;
     QDoubleSpinBox *mDoubleSpinBox = nullptr;
+    QgsTolerantDoubleSpinBox *mQgsTolerantDoubleSpinBox = nullptr;
     QSlider *mSlider = nullptr;
     QDial *mDial = nullptr;
     QgsSlider *mQgsSlider = nullptr;
     QgsDial *mQgsDial = nullptr;
+    QgsTolerantSlider *mQgsTolerantSlider = nullptr;
+    QgsTolerantDial *mQgsTolerantDial = nullptr;
 
     friend class TestQgsRangeWidgetWrapper;
 };
